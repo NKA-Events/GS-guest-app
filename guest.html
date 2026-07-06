@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find Your Table</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Find Your Table</h2>
+    <p>Enter your name or phone number:</p>
+
+    <input type="text" id="searchInput" placeholder="Your name or phone">
+    <button onclick="findTable()">Find My Table</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script src="guest-data.js"></script>
+  <script>
+    function findTable() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+      const resultArea = document.getElementById("result");
+
+      if (!query) {
+        resultArea.innerHTML = "";
+        return;
+      }
+
+      let match = guestData.find(g =>
+        g.name.toLowerCase().includes(query) ||
+        g.phone.toLowerCase().includes(query)
+      );
+
+      if (!match) {
+        resultArea.innerHTML = "<span class='error'>No match found.</span>";
+        return;
+      }
+
+      resultArea.innerHTML = `
+        <strong>${match.name}</strong><br>
+        Your table number is:<br>
+        <h1>${match.table}</h1>
+      `;
+    }
+  </script>
+
+</body>
+</html>
