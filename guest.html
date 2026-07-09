@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NK Artistry – Find Your Table</title>
+  <title>NK ARTISTRY – Find Your Table</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600&display=swap" rel="stylesheet">
 
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       padding: 20px;
-      background: #f0f3f8;
+      background: #F5F5F5;
     }
 
     .brand-header {
@@ -18,8 +20,8 @@
     }
 
     .brand-logo {
-      width: 90px;
-      height: 90px;
+      width: 100px;
+      height: 100px;
       border-radius: 12px;
       object-fit: contain;
       margin-bottom: 10px;
@@ -30,6 +32,7 @@
       font-size: 1.6rem;
       font-weight: 700;
       color: #1a1a1a;
+      font-family: "Lora", serif;
       letter-spacing: 1px;
     }
 
@@ -40,7 +43,7 @@
     }
 
     .box {
-      background: #fff;
+      background: #FFFFFF;
       padding: 20px;
       border-radius: 12px;
       max-width: 500px;
@@ -51,8 +54,9 @@
     h2 {
       margin-top: 0;
       text-align: center;
-      font-size: 1.4rem;
-      color: #333;
+      font-size: 1.8rem;
+      color: #cbb352;
+      font-family: "Monotype Corsiva", serif;
     }
 
     input {
@@ -60,27 +64,89 @@
       padding: 12px;
       font-size: 1.1rem;
       margin-top: 10px;
-      box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 6px;
+      box-sizing: border-box;
     }
 
     button {
       width: 100%;
       padding: 12px;
       margin-top: 10px;
-      background: #0033aa;
+      background: #854726;
       color: #fff;
       border: none;
       border-radius: 6px;
       font-size: 1.1rem;
       cursor: pointer;
       font-weight: 600;
-      letter-spacing: 0.5px;
     }
 
-    button:active {
-      transform: scale(0.98);
+    /* Small modern admin button */
+    #adminButton {
+      display: none;
+      position: fixed;
+      bottom: 14px;
+      right: 14px;
+      padding: 6px 12px;
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      z-index: 9999;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+
+      opacity: 0;
+      transform: scale(0.85);
+      animation: adminFadeIn 0.6s ease forwards;
+    }
+
+    #adminButton:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    @keyframes adminFadeIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 0.85; transform: scale(0.9); }
+    }
+
+    /* Admin modal */
+    #adminModal {
+      display:none;
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.6);
+      z-index:10000;
+      text-align:center;
+      padding-top:120px;
+    }
+
+    #adminModalBox {
+      background:white;
+      padding:20px;
+      width:300px;
+      margin:auto;
+      border-radius:10px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Full opaque lock overlay */
+    #lockOverlay {
+      display:none;
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:white;
+      z-index:9998;
+      text-align:center;
+      padding-top:80px;
+      pointer-events:all;
     }
 
     .result {
@@ -95,94 +161,265 @@
     }
   </style>
 </head>
+
 <body>
 
-  <!-- NK Artistry Branding -->
-  <div class="brand-header">
-    <img src="logo.png" class="brand-logo" alt="NK Artistry Logo">
-    <div class="brand-title">NK Artistry</div>
-    <div class="brand-sub">Event Coordination & Guest Management</div>
+<!-- Lock overlay -->
+<div id="lockOverlay">
+  <h2 style="color:#854726;">Access Closed</h2>
+  <p style="font-size:1.2rem; color:#444;">This event lookup page is no longer available.</p>
+  <p style="color:#999;">(Admin access required)</p>
+</div>
+
+<!-- Admin button -->
+<button id="adminButton" onclick="openAdminModal()">🔑 Admin</button>
+
+<!-- Admin modal -->
+<div id="adminModal">
+  <div id="adminModalBox">
+    <h3>Admin Access</h3>
+    <input id="adminPwd" type="password" placeholder="Enter password">
+    <input id="adminMinutes" type="number" placeholder="Extend minutes">
+    <button onclick="adminUnlock()">Unlock</button>
+    <button onclick="closeAdminModal()">Cancel</button>
   </div>
+</div>
 
-  <div class="box">
-    <h2>Find Your Table</h2>
-    <p>Enter your name:</p>
+<!-- Branding -->
+<div class="brand-header">
+  <img src="logo.png" class="brand-logo" alt="NK ARTISTRY Logo">
+  <div class="brand-title">NK ARTISTRY</div>
+  <div class="brand-sub">Event Coordination & Guest Management</div>
+</div>
 
-    <input type="text" id="searchInput" placeholder="Your name">
-    <button onclick="findTable()">Find My Table</button>
+<div class="box">
+  <h2>Ganga's 50th Birthday</h2>
 
-    <div id="result" class="result"></div>
-  </div>
+  <h3>Find Your Table</h3>
+  <p>Enter your name:</p>
+
+  <input type="text" id="searchInput" placeholder="Your name">
+  <button onclick="findTable()">Find My Table</button>
+
+  <div id="result" class="result"></div>
+</div>
 
 <script src="guest-data.js"></script>
+
 <script>
-  function findTable() {
-    const query = document.getElementById("searchInput").value.toLowerCase().trim();
-    const resultArea = document.getElementById("result");
 
-    if (!query) {
-      resultArea.innerHTML = "";
-      return;
+/* ==========================================================
+   DEVICE TOKEN LOADING (SAFE METHOD)
+   ========================================================== */
+
+const DEVICE_TOKEN = "NK-ARTISTRY-DEVICE-2026";
+
+// Check if device already authorized
+let deviceAuthorized = localStorage.getItem("nk_device_token") === DEVICE_TOKEN;
+
+// If URL contains ?loadDeviceAuth=1, load device-auth.js
+const params = new URLSearchParams(window.location.search);
+if (params.get("loadDeviceAuth") === "1") {
+  const script = document.createElement("script");
+  script.src = "device-auth.js";
+  document.body.appendChild(script);
+}
+
+/* ==========================================================
+   EXPIRY + ADMIN OVERRIDE + AUTO RESET
+   ========================================================== */
+
+const ADMIN_PASSWORD = "NKAdmin2026";
+
+function createExpiryDate(year, month, day, hour, minute) {
+  return new Date(year, month - 1, day, hour, minute);
+}
+
+let expiryTime = createExpiryDate(2026, 7, 18, 23, 45);
+let adminOverride = false;
+
+function checkExpiry() {
+  const now = new Date();
+
+  if (now > expiryTime && !adminOverride) {
+    document.body.style.overflow = "hidden";
+    document.getElementById("lockOverlay").style.display = "block";
+
+    if (localStorage.getItem("nk_device_token") === DEVICE_TOKEN) {
+      document.getElementById("adminButton").style.display = "block";
     }
-
-    // Find all matches
-    let matches = guestData.filter(g =>
-      g.name.toLowerCase().includes(query) ||
-      g.phone.toLowerCase().includes(query)
-    );
-
-    if (matches.length === 0) {
-      resultArea.innerHTML = "<span class='error'>No match found.</span>";
-      return;
-    }
-
-    // If multiple matches → show list with name + table number
-    if (matches.length > 1) {
-      let listHTML = "<strong>Select your name:</strong><br><br>";
-
-      matches.forEach((m, index) => {
-        listHTML += `
-          <div style="
-            padding: 12px;
-            margin: 8px 0;
-            background: #eef3ff;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            border: 1px solid #d0d7ff;
-          " onclick="confirmGuest(${index})">
-            <strong>${m.name}</strong><br>
-            <span style="color:#555;">Table: ${m.table}</span>
-          </div>
-        `;
-      });
-
-      resultArea.innerHTML = listHTML;
-
-      // Store matches globally
-      window._matches = matches;
-      return;
-    }
-
-    // If exactly one match → show table
-    showTable(matches[0]);
   }
 
-  function confirmGuest(index) {
-    const guest = window._matches[index];
-    showTable(guest);
+  if (now > expiryTime && adminOverride) {
+    adminOverride = false;
+    document.body.style.overflow = "hidden";
+    document.getElementById("lockOverlay").style.display = "block";
+
+    if (localStorage.getItem("nk_device_token") === DEVICE_TOKEN) {
+      document.getElementById("adminButton").style.display = "block";
+    }
+  }
+}
+
+checkExpiry();
+setInterval(checkExpiry, 60000);
+
+/* ==========================================================
+   ADMIN MODAL
+   ========================================================== */
+
+function openAdminModal() {
+  document.getElementById("adminModal").style.display = "block";
+}
+
+function closeAdminModal() {
+  document.getElementById("adminPwd").value = "";
+  document.getElementById("adminMinutes").value = "";
+  document.getElementById("adminModal").style.display = "none";
+}
+
+/* ==========================================================
+   ADMIN UNLOCK
+   ========================================================== */
+
+function adminUnlock() {
+  const pwd = document.getElementById("adminPwd").value;
+  const minutes = Number(document.getElementById("adminMinutes").value);
+
+  if (pwd !== ADMIN_PASSWORD) {
+    alert("Incorrect password.");
+    return;
   }
 
-  function showTable(guest) {
-    const resultArea = document.getElementById("result");
-    resultArea.innerHTML = `
-      <strong>${guest.name}</strong><br>
-      Your table number is:<br>
-      <h1>${guest.table}</h1>
+  adminOverride = true;
+
+  if (!isNaN(minutes) && minutes > 0) {
+    const newExpiry = new Date();
+    newExpiry.setMinutes(newExpiry.getMinutes() + minutes);
+    expiryTime = newExpiry;
+  }
+
+  document.getElementById("lockOverlay").style.display = "none";
+  document.getElementById("adminButton").style.display = "none";
+  document.body.style.overflow = "auto";
+
+  document.getElementById("adminPwd").value = "";
+  document.getElementById("adminMinutes").value = "";
+
+  closeAdminModal();
+}
+
+/* ==========================================================
+   SEARCH FUNCTION
+   ========================================================== */
+
+function findTable() {
+  const query = document.getElementById("searchInput").value.toLowerCase().trim();
+  const resultArea = document.getElementById("result");
+
+  if (!query) {
+    resultArea.innerHTML = "";
+    return;
+  }
+
+  const matches = guestData.filter(g =>
+    g.name.toLowerCase().includes(query)
+  );
+
+  if (matches.length === 0) {
+    resultArea.innerHTML = "<span class='error'>No match found.</span>";
+    return;
+  }
+
+  if (matches.length > 1) {
+    let listHTML = "<strong>Select your name:</strong><br><br>";
+
+    matches.forEach((m, index) => {
+      listHTML += `
+        <div style="
+          padding: 12px;
+          margin: 8px 0;
+          background: #F7F3EE;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 1.1rem;
+          border: 1px solid #d0d7ff;
+        " onclick="confirmGuest(${index})">
+          <strong>${m.name}</strong><br>
+          <span style="color:#555;">Table: ${m.table}</span>
+        </div>
+      `;
+    });
+
+    resultArea.innerHTML = listHTML;
+    window._matches = matches;
+    return;
+  }
+
+  showTable(matches[0]);
+}
+
+function confirmGuest(index) {
+  showTable(window._matches[index]);
+}
+
+function showTable(guest) {
+  const resultArea = document.getElementById("result");
+  const floorPlanFile = `Table-${guest.table}.png`;
+
+  resultArea.innerHTML = `
+    <strong>${guest.name}</strong><br>
+    Your table number is:<br>
+    <h1>${guest.table}</h1>
+
+    <div style="margin-top: 20px; text-align:center;">
+      <img src="${floorPlanFile}" 
+           alt="Floor Plan"
+           style="
+             width: 90%;
+             max-width: 400px;
+             border-radius: 10px;
+             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+           ">
+    </div>
+
+    <button onclick="showGuestsAtTable(${guest.table})">
+      Show guests at this table
+    </button>
+
+    <div id="tableGuests" style="margin-top:20px;"></div>
+  `;
+}
+
+function showGuestsAtTable(tableNumber) {
+  const container = document.getElementById("tableGuests");
+  const guests = guestData.filter(g => g.table == tableNumber);
+
+  if (guests.length === 0) {
+    container.innerHTML = "<em>No guests found for this table.</em>";
+    return;
+  }
+
+  let html = `<strong>Guests at Table ${tableNumber}:</strong><br><br>`;
+
+  guests.forEach(g => {
+    html += `
+      <div style="
+        padding: 10px;
+        margin: 6px 0;
+        background: #EFE7DD;
+        border-radius: 6px;
+        border: 1px solid #d0d7ff;
+      ">
+        ${g.name}
+      </div>
     `;
-  }
-</script>
+  });
 
+  container.innerHTML = html;
+}
+
+</script>
 
 </body>
 </html>
