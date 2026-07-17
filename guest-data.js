@@ -495,7 +495,7 @@ const guestData = [
     "table": "10"
   },
   {
-    "name": "?",
+    "name": "Isabella Armstrong",
     "phone": "",
     "table": "10"
   },
@@ -595,7 +595,7 @@ const guestData = [
     "table": "12"
   },
   {
-    "name": "?",
+    "name": "Timod Senavirathna",
     "phone": "",
     "table": "12"
   }
